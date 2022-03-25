@@ -44,7 +44,7 @@ def lossfun_helper(params, precomputed_vars, optim_params, patch_params):
 
   # ========== Compose outputs from MPI ==========
   # sigmoid function makes sure both MPI colors and alphas are within the range [0, 1]
-  mpi = flax.nn.sigmoid(params[0])
+  mpi = flax.linen.sigmoid(params[0])
   mpi = np.pad(mpi, pad_width=((0,) * 2, (filter_halfwidth,) * 2, (filter_halfwidth,) * 2, (0,) * 2), mode='edge')
   mpi_colors = mpi[..., :-1]
   mpi_alphas = mpi[..., -1:]

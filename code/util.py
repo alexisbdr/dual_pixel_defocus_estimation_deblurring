@@ -40,7 +40,7 @@ def load_data_and_calibration(data_dir, dp_file, patch_params):
   right_white_calib = _load_and_preprocess_pixel_data(os.path.join(data_dir, calibration_dir, f'white_sheet_right.png'))
   per_pixel_scale = left_white_calib / right_white_calib
   window_size = 101
-  per_pixel_scale_avg = flax.nn.avg_pool(per_pixel_scale[None], (window_size, window_size), strides=(1, 1), padding='SAME')[0]
+  per_pixel_scale_avg = flax.linen.avg_pool(per_pixel_scale[None], (window_size, window_size), strides=(1, 1), padding='SAME')[0]
   right_image = per_pixel_scale_avg * right_image
 
   # Keep only central field of view (1008 * 1344)
