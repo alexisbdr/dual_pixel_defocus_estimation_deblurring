@@ -8,6 +8,7 @@ import scipy as oscipy
 import PIL.Image
 import os
 import flax
+import cv2
 
 
 def load_data_and_calibration(data_dir, dp_file, patch_params):
@@ -38,6 +39,9 @@ def load_data_and_calibration(data_dir, dp_file, patch_params):
   # Vignetting correction
   left_white_calib = _load_and_preprocess_pixel_data(os.path.join(data_dir, calibration_dir, f'white_sheet_left.png'))
   right_white_calib = _load_and_preprocess_pixel_data(os.path.join(data_dir, calibration_dir, f'white_sheet_right.png'))
+  if left_white_calib.shape != left_image.shape:
+    left_image = cv2.resize(left_image, (left_white_calib.shape[1], left_white_calib.shape[0]), interpolation=cv2.INTER_CUBIC)
+    right_image = cv2.resize(right_image, (right_white_calib.shape[1], right_white_calib.shape[0]), interpolation=cv2.INTER_CUBIC)
   per_pixel_scale = left_white_calib / right_white_calib
   window_size = 101
   per_pixel_scale_avg = flax.linen.avg_pool(per_pixel_scale[None], (window_size, window_size), strides=(1, 1), padding='SAME')[0]
