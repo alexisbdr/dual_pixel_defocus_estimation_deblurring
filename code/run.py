@@ -1,3 +1,4 @@
+import jax
 import jax.numpy as np
 import numpy as onp
 import setup
@@ -6,6 +7,7 @@ import util
 from scipy.special import logit
 import os
 import cv2
+from jax import device_put
 
 
 def main(input_params, optim_params):
@@ -36,6 +38,11 @@ def main(input_params, optim_params):
   filter_halfwidth = blur_kernels.shape[-1] // 2
   blur_kernels_scaled = util.rescale_blur_kernels(blur_kernels, filter_halfwidth*2+1, scales)
 
+  device = optim_params['device']
+  observations = device_put(observations, device=jax.devices()[device])
+  filter_halfwidth = device_put(filter_halfwidth, device=jax.devices()[device])
+  blur_kernels_scaled = device_put(blur_kernels_scaled, device=jax.devices()[device])
+  
   precomputed_vars = \
     dict(observations = observations,
          observations_volume = np.repeat(observations[None, ...], repeats=num_mpi_layers, axis=0),

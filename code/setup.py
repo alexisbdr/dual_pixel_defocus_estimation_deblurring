@@ -46,6 +46,7 @@ def set_up_parameters(i_file=0):
          weight_prior_entropy = weights_prior_entropy[i_file] / (-np.log(np.sum((np.ones((num_mpi_layers,)) / num_mpi_layers) ** 2))),
          num_mpi_layers = num_mpi_layers,
          mpi_start_scale = mpi_start_scales[i_file],
-         mpi_end_scale = mpi_end_scales[i_file])
+         mpi_end_scale = mpi_end_scales[i_file]
+         device = 1)
 
   return num_of_files, input_params, optim_params
